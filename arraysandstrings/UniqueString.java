@@ -26,6 +26,18 @@ class UniqueString {
     return true;
   }
 
+  /**
+   * Sorting solution.
+   */
+  static boolean sortingUnique(String s) {
+    char[] sorted = s.toCharArray();
+    Arrays.sort(sorted);
+    for (int i = 1; i < sorted.length; i++) 
+      if (sorted[i-1] == sorted[i])
+        return false;
+    return true;
+  }
+
   public static void main(String[] args) {
     String abcde = "abcde";
     String withDuplicates = "withDuplicates";
@@ -35,6 +47,9 @@ class UniqueString {
 
     System.out.println("Set abcde: " + setUnique(abcde));
     System.out.println("Set withDuplicates: " + setUnique(withDuplicates));
+
+    System.out.println("Sorting abcde: " + sortingUnique(abcde));
+    System.out.println("Sorting withDuplicates: " + sortingUnique(withDuplicates));
   }
 }
 
