@@ -38,6 +38,18 @@ class UniqueString {
     return true;
   }
 
+  /**
+   * BitSet solution.
+   */
+  static boolean bitsetUnique(String s) {
+    BitSet bitSet = new BitSet();
+    for (char c : s.toCharArray()) {
+      if(bitSet.get(c)) return false;
+      bitSet.set(c);
+    }
+    return true;
+  }
+
   public static void main(String[] args) {
     String abcde = "abcde";
     String withDuplicates = "withDuplicates";
@@ -50,6 +62,9 @@ class UniqueString {
 
     System.out.println("Sorting abcde: " + sortingUnique(abcde));
     System.out.println("Sorting withDuplicates: " + sortingUnique(withDuplicates));
+
+    System.out.println("BitSet abcde: " + bitsetUnique(abcde));
+    System.out.println("BitSet withDuplicates: " + bitsetUnique(withDuplicates));
   }
 }
 
