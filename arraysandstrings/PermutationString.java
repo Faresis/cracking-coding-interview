@@ -28,6 +28,24 @@ class PermutationString {
     return s1Map.equals(s2Map);
   }
 
+  /**
+   * Sort solution.
+   */
+  static boolean sortPermutation(String s1, String s2) {
+    if (s1.length() != s2.length())
+      return false;
+
+    char[] sorted1 = s1.toCharArray();
+    Arrays.sort(sorted1);
+    char[] sorted2 = s2.toCharArray();
+    Arrays.sort(sorted2);
+
+    for (int i = 0; i < sorted1.length; i++)
+      if (sorted1[i] != sorted2[i])
+        return false;
+    return true;
+  }
+
   public static void main(String[] args) {
     String abc = "abc";
     String aaa = "aaa";
@@ -54,6 +72,16 @@ class PermutationString {
     System.out.println("Map cbaa abc: " + mapPermutation(cbaa, abc));
     System.out.println("Map aab bba: " + mapPermutation(aab, bba));
     System.out.println("Map bba aab: " + mapPermutation(bba, aab));
+
+    System.out.println();
+    System.out.println("Sort abc aaa: " + sortPermutation(abc, aaa));
+    System.out.println("Sort aaa abc: " + sortPermutation(aaa, abc));
+    System.out.println("Sort abc cba: " + sortPermutation(abc, cba));
+    System.out.println("Sort cba abc: " + sortPermutation(cba, abc));
+    System.out.println("Sort abc cbaa: " + sortPermutation(abc, cbaa));
+    System.out.println("Sort cbaa abc: " + sortPermutation(cbaa, abc));
+    System.out.println("Sort aab bba: " + sortPermutation(aab, bba));
+    System.out.println("Sort bba aab: " + sortPermutation(bba, aab));
   }
 
   private static int count(char c, String s) {
