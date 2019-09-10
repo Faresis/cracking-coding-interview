@@ -18,17 +18,29 @@ class RotationString {
     return s2.substring(0, s2Idx).equals(s1.substring(s1.length() - s2Idx));
   }
 
+  static boolean isRotationSubstr(String s1, String s2) {
+    int len = s1.length();
+    if (len > 0 && len == s2.length()) {
+      String concat = s1 + s1;
+      return concat.indexOf(s2) >= 0;
+    }
+    return false;
+  }
+
   public static void main(String[] args) {
     String s1 = "waterbottle";
     String s2 = "erbottlewat";
-    System.out.printf("%s : %s -> %s\n", s1, s2, isRotation(s1, s2));
+    System.out.printf("isRotation %s : %s -> %s\n", s1, s2, isRotation(s1, s2));
+    System.out.printf("isRotationSubstr %s : %s -> %s\n", s1, s2, isRotationSubstr(s1, s2));
 
     s1 = "taxat";
     s2 = "xatta";
-    System.out.printf("%s : %s -> %s\n", s1, s2, isRotation(s1, s2));
+    System.out.printf("isRotation %s : %s -> %s\n", s1, s2, isRotation(s1, s2));
+    System.out.printf("isRotationSubstr %s : %s -> %s\n", s1, s2, isRotationSubstr(s1, s2));
 
     s1 = "taxar";
     s2 = "xatra";
-    System.out.printf("%s : %s -> %s\n", s1, s2, isRotation(s1, s2));
+    System.out.printf("isRotation %s : %s -> %s\n", s1, s2, isRotation(s1, s2));
+    System.out.printf("isRotationSubstr %s : %s -> %s\n", s1, s2, isRotationSubstr(s1, s2));
   }
 }
