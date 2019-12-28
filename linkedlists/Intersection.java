@@ -1,3 +1,7 @@
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
+
 /**
  *  Intersection: Given two(singly) linked lists, determine if the two lists intersect.
  *  Return the intersecting node.
@@ -58,6 +62,7 @@ public class Intersection {
     System.out.println(second); // ghijdef
 
     System.out.println("Brute: " + intersectBrute(first, second).data);
+    System.out.println("Set: " + intersectSet(first, second).data);
   }
 
   /**
@@ -72,6 +77,23 @@ public class Intersection {
         inner = inner.next;
       }
       first = first.next;
+    }
+    return null;
+  }
+
+  /**
+   *  Returns intersection of two singly lists.
+   *  R:O(n), S:O(n).
+   */
+  static Node intersectSet(Node first, Node second) {
+    Set<Node> identity = Collections.newSetFromMap(new IdentityHashMap<>());
+    while (first != null) {
+      identity.add(first);
+      first = first.next;
+    }
+    while (second != null) {
+      if (!identity.add(second)) return second;
+      second = second.next;
     }
     return null;
   }
