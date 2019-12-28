@@ -27,6 +27,15 @@ public class Palindrome {
       return first;
     }
 
+    static int length(Node node) {
+      int len = 0;
+      while (node != null) {
+        len++;
+        node = node.next;
+      }
+      return len;
+    }
+
     @Override
     public String toString() {
       StringBuilder sb = new StringBuilder();
@@ -58,6 +67,46 @@ public class Palindrome {
     singlyLinked = Node.toSinglyLinkedList("hello");
     System.out.println(singlyLinked);
     System.out.println("Is palindrome: " + isPalindromeWithStack(singlyLinked));
+
+    System.out.println();
+    System.out.println("Singly linked with length: ");
+    singlyLinked = Node.toSinglyLinkedList("tabat");
+    System.out.println(singlyLinked);
+    System.out.println("Is palindrome: " + isPalindromeWithLength(singlyLinked));
+
+    singlyLinked = Node.toSinglyLinkedList("hello");
+    System.out.println(singlyLinked);
+    System.out.println("Is palindrome: " + isPalindromeWithLength(singlyLinked));
+
+    singlyLinked = Node.toSinglyLinkedList("taat");
+    System.out.println(singlyLinked);
+    System.out.println("Is palindrome: " + isPalindromeWithLength(singlyLinked));
+
+    singlyLinked = Node.toSinglyLinkedList("helo");
+    System.out.println(singlyLinked);
+    System.out.println("Is palindrome: " + isPalindromeWithLength(singlyLinked));
+  }
+
+  /**
+   *  Checks if the provided singly linked list contains a palindrome.
+   *  R:O(n^2), S:O(1 // considering recursion rewritten to iteration).
+   */
+  static boolean isPalindromeWithLength(Node node) {
+    int length = Node.length(node);
+    return isPalindromeRec(node, length - 1);
+  }
+
+  private static boolean isPalindromeRec(Node node, int steps) {
+    if (steps < 2) return true;
+
+    return isEquals(node, steps) && isPalindromeRec(node.next, steps-2);
+  }
+
+  private static boolean isEquals(Node node, int steps) {
+    Node first = node;
+    Node second = node;
+    while (steps-- > 0) second = second.next;
+    return first.data == second.data;
   }
 
   /**
