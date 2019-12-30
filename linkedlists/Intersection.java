@@ -63,6 +63,7 @@ public class Intersection {
 
     System.out.println("Brute: " + intersectBrute(first, second).data);
     System.out.println("Set: " + intersectSet(first, second).data);
+    System.out.println("Cutoff: " + intersectCutoff(first, second).data);
   }
 
   /**
@@ -96,6 +97,29 @@ public class Intersection {
       second = second.next;
     }
     return null;
+  }
+
+  /**
+   *  Returns intersection of two singly lists.
+   *  R:O(a+b), S:O(1).
+   */
+  static Node intersectCutoff(Node first, Node second) {
+    Node cutoff = null, firstLast = null, secondLast = null;
+    while (firstLast == secondLast) {
+      cutoff = firstLast;
+      firstLast = getLast(first, cutoff);
+      secondLast = getLast(second, cutoff);
+    }
+    return cutoff;
+  }
+
+  private static Node getLast(Node node, Node cutoff) {
+    Node result = null;
+    while (node != null && node != cutoff) {
+      result = node;
+      node = node.next;
+    }
+    return result;
   }
 }
 
