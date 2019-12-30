@@ -54,16 +54,17 @@ public class Intersection {
   }
 
   public static void main(String[] args) {
-    Node first = Node.toSinglyLinkedList("ABCDEF");
+    Node first = Node.toSinglyLinkedList("AAAAAABCDEF");
     Node second = Node.toSinglyLinkedList("GHIJ");
-    Node.join(second, first, 3);
+    Node.join(second, first, 8);
 
-    System.out.println(first);  // abcdef
+    System.out.println(first);  // aaaaaabcdef
     System.out.println(second); // ghijdef
 
     System.out.println("Brute: " + intersectBrute(first, second).data);
     System.out.println("Set: " + intersectSet(first, second).data);
     System.out.println("Cutoff: " + intersectCutoff(first, second).data);
+    System.out.println("Shift: " + intersectShift(first, second).data);
   }
 
   /**
@@ -111,6 +112,23 @@ public class Intersection {
       secondLast = getLast(second, cutoff);
     }
     return cutoff;
+  }
+
+  /**
+   *  Returns intersection of two singly lists.
+   *  R:O(n), S:O(1).
+   */
+  static Node intersectShift(Node first, Node second) {
+    int firstLength = Node.length(first);
+    int secondLength = Node.length(second);
+    int diff = firstLength - secondLength;
+    while (diff-- > 0) first = first.next;
+    while (++diff < 0) second = second.next;
+    while (second != first) {
+      first = first.next;
+      second = second.next;
+    }
+    return second;
   }
 
   private static Node getLast(Node node, Node cutoff) {
