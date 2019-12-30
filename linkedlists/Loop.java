@@ -61,6 +61,33 @@ public class Loop {
 
     System.out.println("Brute: " + findCycleBrute(cycle).data);
     System.out.println("Brute: " + findCycleBrute(nocycle));
+    System.out.println("Pattern: " + findCyclePattern(cycle).data);
+    System.out.println("Pattern: " + findCyclePattern(nocycle));
+  }
+
+  /**
+   *  Finds a cycle in a singly linked list if one exists.
+   *  R:O(n), S:O(1).
+   */
+  static Node findCyclePattern(Node list) {
+    Node fast = list.next;
+    Node slow = list;
+    Node flashpoint = null;
+    int tick = 1;
+    while (fast != null && fast != slow) {
+      fast = fast.next;
+      slow = ++tick % 2 == 0 ? slow.next : slow;
+    }
+
+    if (fast == null) return null; // no cycle
+
+    flashpoint = fast.next;
+    slow = list;
+    while (flashpoint != slow) {
+      flashpoint = flashpoint.next;
+      slow = slow.next;
+    }
+    return flashpoint;
   }
 
   /**
