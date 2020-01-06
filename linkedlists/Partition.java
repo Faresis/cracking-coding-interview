@@ -47,6 +47,11 @@ public class Partition {
 
     Node.print(list);
     Node.print(partition(list, 5));
+
+    list = Node.toList(3,5,8,5,10,2,1);
+
+    Node.print(list);
+    Node.print(cleanerPartition(list, 5));
   }
 
   /**
@@ -91,6 +96,28 @@ public class Partition {
       }
     }
     return result;
+  }
+
+  /**
+   *  Partitions a singly linked list based on the specified value.
+   *  R:O(n), S:O(1).
+   */
+  static Node cleanerPartition(Node node, int val) {
+    Node head = node;
+    Node tail = node;
+    while (node != null) {
+      Node next = node.next;
+      if (node.data < val) {
+        node.next = head;
+        head = node;
+      } else {
+        tail.next = node;
+        tail = node;
+      }
+      node = next;
+    }
+    tail.next = null;
+    return head;
   }
 }
 
