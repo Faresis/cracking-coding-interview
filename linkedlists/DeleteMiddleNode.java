@@ -31,9 +31,14 @@ public class DeleteMiddleNode {
   public static void main(String[] args) {
     Node list = new Node("first", new Node("second", new Node("third", new Node("fourth", new Node("fifth")))));
 
+    System.out.println("Full list.");
     Node.print(list);
     deleteMiddleNode(list.next.next);
+    System.out.println("First removal.");
     Node.print(list); // 1,2,4,5
+    deleteMiddleNodeBook(list.next.next);
+    System.out.println("Second removal.");
+    Node.print(list); // 1,2,5
   }
 
   /**
@@ -50,5 +55,17 @@ public class DeleteMiddleNode {
     }
     prev.next = null;
   } 
+
+  /**
+   *  Deletes provided node from the middle of a singly linked list.
+   *  R:O(1), S:O(1).
+   */
+  static void deleteMiddleNodeBook(Node node) {
+    if (node == null || node.next == null) return;
+
+    Node next = node.next;
+    node.data = next.data;
+    node.next = next.next;
+  }
 }
 
