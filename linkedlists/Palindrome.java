@@ -85,6 +85,43 @@ public class Palindrome {
     singlyLinked = Node.toSinglyLinkedList("helo");
     System.out.println(singlyLinked);
     System.out.println("Is palindrome: " + isPalindromeWithLength(singlyLinked));
+
+    System.out.println();
+    System.out.println("Singly linked with recursion: ");
+    singlyLinked = Node.toSinglyLinkedList("tabat");
+    System.out.println(singlyLinked);
+    System.out.println("Is palindrome: " + isPalindromeWithRecursion(singlyLinked));
+
+    singlyLinked = Node.toSinglyLinkedList("hello");
+    System.out.println(singlyLinked);
+    System.out.println("Is palindrome: " + isPalindromeWithRecursion(singlyLinked));
+
+    singlyLinked = Node.toSinglyLinkedList("taat");
+    System.out.println(singlyLinked);
+    System.out.println("Is palindrome: " + isPalindromeWithRecursion(singlyLinked));
+
+    singlyLinked = Node.toSinglyLinkedList("helo");
+    System.out.println(singlyLinked);
+    System.out.println("Is palindrome: " + isPalindromeWithRecursion(singlyLinked));
+  }
+
+  /**
+   *  Checks if the provided singly linked list contains a palindrome.
+   *  R:O(n), S:O(n).
+   */
+  static boolean isPalindromeWithRecursion(Node node) {
+    int len = Node.length(node);
+    return isPalindromeWithRecursionHelper(node, len) != null;
+  }
+
+  private static Node isPalindromeWithRecursionHelper(Node node, int len) {
+    if (len <= 0) return node;
+    if (len == 1) return node.next;
+    
+    Node child = isPalindromeWithRecursionHelper(node.next, len-2);
+    if (child == null) return null;
+    if (child.data != node.data) return null;
+    return child.next == null ? new Node() : child.next;
   }
 
   /**
