@@ -3,6 +3,30 @@ import java.util.EmptyStackException;
 import java.util.LinkedList;
 import java.util.List;
 
+class MyQueueLazyRemoval {
+  Stack<Integer> newestFirst = new Stack<>();
+  Stack<Integer> oldestFirst = new Stack<>();
+
+  void add(int data) {
+    this.newestFirst.push(data);
+  }
+
+  int remove() {
+    if (oldestFirst.isEmpty()) moveAll(newestFirst, oldestFirst);
+    return oldestFirst.pop();
+  }
+
+  boolean isEmpty() {
+    return oldestFirst.isEmpty() && newestFirst.isEmpty();
+  }
+
+  private static <T> void moveAll(Stack<? extends T> from, Stack<? super T> to) {
+    while (!from.empty()) {
+      to.push(from.pop());
+    }
+  }
+}
+
 class MyQueueFastRemoval {
   Stack<Integer> s1 = new Stack<>();
   Stack<Integer> s2 = new Stack<>();
@@ -66,6 +90,7 @@ class MyQueueFastAdd {
 
 public class TwoStacksQueue {
   public static void main(String[] args) {
+    System.out.println("Fast removal.");
     MyQueueFastRemoval qr = new MyQueueFastRemoval();
     qr.add(1);
     qr.add(2);
@@ -81,6 +106,7 @@ public class TwoStacksQueue {
     while (!qr.isEmpty())
       System.out.println(qr.remove());
 
+    System.out.println("Fast add.");
     MyQueueFastAdd qa = new MyQueueFastAdd();
     qa.add(1);
     qa.add(2);
@@ -98,6 +124,22 @@ public class TwoStacksQueue {
     System.out.println("Removing all.");
     while (!qa.isEmpty())
       System.out.println(qa.remove());
+
+    System.out.println("Lazy removal.");
+    MyQueueLazyRemoval lr = new MyQueueLazyRemoval();
+    lr.add(1);
+    lr.add(2);
+    lr.add(3);
+    lr.add(4);
+    lr.add(5);
+    lr.add(6);
+    lr.add(7);
+    lr.add(8);
+    lr.add(9);
+    lr.add(10);
+
+    while (!lr.isEmpty())
+      System.out.println(lr.remove());
   }
 }
 
