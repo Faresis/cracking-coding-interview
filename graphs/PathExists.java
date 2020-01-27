@@ -56,6 +56,18 @@ class PathExists {
     }
   }
 
+  private static boolean bfs(Node start, Node end) {
+    Queue<Node> bfs = new LinkedList<>();
+    Set<Node> visited = new HashSet<>();
+    bfs.add(start);
+    while (!bfs.isEmpty()) {
+      Node current = bfs.remove();
+      if (current == end) return true;
+      if (visited.add(current)) bfs.addAll(current.destinations);
+    }
+    return false;
+  }
+
   private static boolean twoWaySearch(Node start, Node end) {
     Set<Node> sources = new HashSet<>();
     Set<Node> destinations = new HashSet<>();
@@ -95,22 +107,39 @@ class PathExists {
 
     g.print();
 
-    System.out.println("Path exists 'a -> i': " + twoWaySearch(g.get("a"), g.get("i")));
-    System.out.println("Path exists 'a -> e': " + twoWaySearch(g.get("a"), g.get("e")));
-    System.out.println("Path exists 'e -> a': " + twoWaySearch(g.get("e"), g.get("a")));
-    System.out.println("Path exists 'b -> a': " + twoWaySearch(g.get("b"), g.get("a")));
-    System.out.println("Path exists 'c -> a': " + twoWaySearch(g.get("c"), g.get("a")));
-    System.out.println("Path exists 'd -> a': " + twoWaySearch(g.get("d"), g.get("a")));
-    System.out.println("Path exists 'd -> g': " + twoWaySearch(g.get("d"), g.get("g")));
-    System.out.println("Path exists 'a -> x': " + twoWaySearch(g.get("a"), g.get("x")));
-    System.out.println("Path exists 'b -> x': " + twoWaySearch(g.get("b"), g.get("x")));
-    System.out.println("Path exists 'c -> x': " + twoWaySearch(g.get("c"), g.get("x")));
-    System.out.println("Path exists 'd -> x': " + twoWaySearch(g.get("d"), g.get("x")));
-    System.out.println("Path exists 'e -> x': " + twoWaySearch(g.get("e"), g.get("x")));
-    System.out.println("Path exists 'f -> x': " + twoWaySearch(g.get("f"), g.get("x")));
-    System.out.println("Path exists 'g -> x': " + twoWaySearch(g.get("g"), g.get("x")));
-    System.out.println("Path exists 'h -> x': " + twoWaySearch(g.get("h"), g.get("x")));
-    System.out.println("Path exists 'i -> x': " + twoWaySearch(g.get("i"), g.get("x")));
+    System.out.println("Path exists (two way) 'a -> i': " + twoWaySearch(g.get("a"), g.get("i")));
+    System.out.println("Path exists (two way) 'a -> e': " + twoWaySearch(g.get("a"), g.get("e")));
+    System.out.println("Path exists (two way) 'e -> a': " + twoWaySearch(g.get("e"), g.get("a")));
+    System.out.println("Path exists (two way) 'b -> a': " + twoWaySearch(g.get("b"), g.get("a")));
+    System.out.println("Path exists (two way) 'c -> a': " + twoWaySearch(g.get("c"), g.get("a")));
+    System.out.println("Path exists (two way) 'd -> a': " + twoWaySearch(g.get("d"), g.get("a")));
+    System.out.println("Path exists (two way) 'd -> g': " + twoWaySearch(g.get("d"), g.get("g")));
+    System.out.println("Path exists (two way) 'a -> x': " + twoWaySearch(g.get("a"), g.get("x")));
+    System.out.println("Path exists (two way) 'b -> x': " + twoWaySearch(g.get("b"), g.get("x")));
+    System.out.println("Path exists (two way) 'c -> x': " + twoWaySearch(g.get("c"), g.get("x")));
+    System.out.println("Path exists (two way) 'd -> x': " + twoWaySearch(g.get("d"), g.get("x")));
+    System.out.println("Path exists (two way) 'e -> x': " + twoWaySearch(g.get("e"), g.get("x")));
+    System.out.println("Path exists (two way) 'f -> x': " + twoWaySearch(g.get("f"), g.get("x")));
+    System.out.println("Path exists (two way) 'g -> x': " + twoWaySearch(g.get("g"), g.get("x")));
+    System.out.println("Path exists (two way) 'h -> x': " + twoWaySearch(g.get("h"), g.get("x")));
+    System.out.println("Path exists (two way) 'i -> x': " + twoWaySearch(g.get("i"), g.get("x")));
+
+    System.out.println("Path exists (bfs) 'a -> i': " + bfs(g.get("a"), g.get("i")));
+    System.out.println("Path exists (bfs) 'a -> e': " + bfs(g.get("a"), g.get("e")));
+    System.out.println("Path exists (bfs) 'e -> a': " + bfs(g.get("e"), g.get("a")));
+    System.out.println("Path exists (bfs) 'b -> a': " + bfs(g.get("b"), g.get("a")));
+    System.out.println("Path exists (bfs) 'c -> a': " + bfs(g.get("c"), g.get("a")));
+    System.out.println("Path exists (bfs) 'd -> a': " + bfs(g.get("d"), g.get("a")));
+    System.out.println("Path exists (bfs) 'd -> g': " + bfs(g.get("d"), g.get("g")));
+    System.out.println("Path exists (bfs) 'a -> x': " + bfs(g.get("a"), g.get("x")));
+    System.out.println("Path exists (bfs) 'b -> x': " + bfs(g.get("b"), g.get("x")));
+    System.out.println("Path exists (bfs) 'c -> x': " + bfs(g.get("c"), g.get("x")));
+    System.out.println("Path exists (bfs) 'd -> x': " + bfs(g.get("d"), g.get("x")));
+    System.out.println("Path exists (bfs) 'e -> x': " + bfs(g.get("e"), g.get("x")));
+    System.out.println("Path exists (bfs) 'f -> x': " + bfs(g.get("f"), g.get("x")));
+    System.out.println("Path exists (bfs) 'g -> x': " + bfs(g.get("g"), g.get("x")));
+    System.out.println("Path exists (bfs) 'h -> x': " + bfs(g.get("h"), g.get("x")));
+    System.out.println("Path exists (bfs) 'i -> x': " + bfs(g.get("i"), g.get("x")));
   }
 }
 
