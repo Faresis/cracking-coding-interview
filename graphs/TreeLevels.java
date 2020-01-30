@@ -1,6 +1,8 @@
 import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class TreeLevels {
   private static class Tree {
@@ -49,7 +51,7 @@ public class TreeLevels {
   }
 
   public static List<List<Integer>> toLevels(Tree tree) {
-    List<List<Integer>> levels = new LinkedList<>();
+    List<List<Integer>> levels = new ArrayList<>();
     toLevels(levels, tree.root, 1);
     return levels;
   }
@@ -64,6 +66,26 @@ public class TreeLevels {
     toLevels(levels, node.right, idx * 2 + 1);
   }
 
+  public static List<List<Integer>> toLevelsBook(Tree tree) {
+    List<List<Integer>> result = new LinkedList<>();
+    List<Node> current = new LinkedList<>();
+    if (tree.root != null) current.add(tree.root);
+    while (!current.isEmpty()) {
+      result.add(toInts(current));
+      List<Node> parents = current;
+      current = new LinkedList<>();
+      for (Node parent : parents) {
+        if (parent.left != null) current.add(parent.left);
+        if (parent.right != null) current.add(parent.right);
+      }
+    }
+    return result;
+  }
+
+  private static List<Integer> toInts(List<Node> nodes) {
+    return nodes.stream().map(n -> n.data).collect(Collectors.toList());
+  }
+
   private static int toLevel(int idx) {
     return (int) (Math.log10(idx) / Math.log10(2));
   }
@@ -75,6 +97,7 @@ public class TreeLevels {
     System.out.println("Array: " + Arrays.toString(arr));
     System.out.println("Tree: " + tree);
     System.out.println("Levels: " + toLevels(tree));
+    System.out.println("Levels book: " + toLevelsBook(tree));
   }
 }
 
