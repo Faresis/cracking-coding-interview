@@ -62,6 +62,21 @@ public class IsBalanced {
     return left + right + 1;
   }
 
+  public static boolean isBalancedBook(Tree tree) {
+    int height = getHeight(tree.root);
+    return height >= 0;
+  }
+
+  private static int getHeight(Node node) {
+    if (node == null) return 0;
+    int left = getHeight(node.left);
+    if (left < 0) return left;
+    int right = getHeight(node.right);
+    if (right < 0) return right;
+    if (Math.abs(left - right) > 1) return -1;
+    return Math.max(left, right) + 1;
+  }
+
   public static void main(String[] args) {
     int[] arr = {10, 24, 31, 42, 57, 63, 79, 82, 98, 105};
 
@@ -69,11 +84,19 @@ public class IsBalanced {
     System.out.println("Array: " + Arrays.toString(arr));
     System.out.println("Tree: " + tree);
     System.out.println("Is balanced: " + isBalanced(tree));
+    System.out.println("Is balanced book: " + isBalancedBook(tree));
 
     tree.root.left.left = null;
 
     System.out.println("Tree: " + tree);
-    System.out.println("Is balanced: " + isBalanced(tree));
+    System.out.println("Is balanced : " + isBalanced(tree));
+    System.out.println("Is balanced book: " + isBalancedBook(tree));
+
+    tree.root.left.left = Tree.toTree(new int[]{ 10, 11, 12, 13, 14, 15, 16}).root;
+
+    System.out.println("Tree: " + tree);
+    System.out.println("Is balanced : " + isBalanced(tree));
+    System.out.println("Is balanced book: " + isBalancedBook(tree));
   }
 }
 
