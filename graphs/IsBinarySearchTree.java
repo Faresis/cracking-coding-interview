@@ -62,6 +62,20 @@ public class IsBinarySearchTree {
     return result;
   }
 
+  public static boolean isBstRev(Tree tree) {
+    return isBstRev(tree.root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+  }
+
+  private static boolean isBstRev(Node node, int min, int max) {
+    if (node == null) return true;
+    boolean result = true;
+    result &= node.data > min;
+    result &= node.data < max;
+    result &= isBstRev(node.left, min, node.data);
+    result &= isBstRev(node.right, node.data, max);
+    return result;
+  }
+
   public static void main(String[] args) {
     int[] arr = {10, 24, 31, 42, 57, 63, 79, 82, 98, 105};
 
@@ -69,22 +83,33 @@ public class IsBinarySearchTree {
     System.out.println("Array: " + Arrays.toString(arr));
     System.out.println("Tree: " + tree);
     System.out.println("Is bst: " + isBst(tree));
+    System.out.println("Is bst revised: " + isBstRev(tree));
 
+    tree.root.left.right.data = 67;
+
+    System.out.println("Tree: " + tree);
+    System.out.println("Is bst: " + isBst(tree));
+    System.out.println("Is bst revised: " + isBstRev(tree));
+
+    tree.root.left.right.data = 57;
     tree.root.left.left.data = 70;
 
     System.out.println("Tree: " + tree);
     System.out.println("Is bst: " + isBst(tree));
+    System.out.println("Is bst revised: " + isBstRev(tree));
 
     tree.root.left.left.data = 24;
     tree.root.right.data = 62;
 
     System.out.println("Tree: " + tree);
     System.out.println("Is bst: " + isBst(tree));
+    System.out.println("Is bst revised: " + isBstRev(tree));
 
     tree.root.right.data = 83;
 
     System.out.println("Tree: " + tree);
     System.out.println("Is bst: " + isBst(tree));
+    System.out.println("Is bst revised: " + isBstRev(tree));
   }
 }
 
