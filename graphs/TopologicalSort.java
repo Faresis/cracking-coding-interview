@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.Stack;
+import java.util.Iterator;
 
 public class TopologicalSort {
   private static class Graph {
@@ -18,6 +20,10 @@ public class TopologicalSort {
 
     List<Node> findAll(Predicate<Node> p) {
       return this.nodes.stream().filter(p).collect(Collectors.toList());
+    }
+
+    Node findAny(Predicate<Node> p) {
+      return this.nodes.stream().filter(p).findAny().orElse(null);
     }
 
     boolean isEmpty() {
@@ -60,6 +66,13 @@ public class TopologicalSort {
   }
 
   private static class Node {
+    enum State {
+      NOT_VISITED,
+      VISITED,
+      IN_PROGRESS
+    }
+
+    State state = State.NOT_VISITED;
     String data;
     List<Node> destinations = new LinkedList<>();
     List<Node> sources = new LinkedList<>();
@@ -97,6 +110,28 @@ public class TopologicalSort {
     return result;
   }
 
+  public static Stack<Node> buildOrderDfs(Graph graph) {
+    Node free = graph.findAny(n -> n.state == Node.State.NOT_VISITED);
+    Stack<Node> result = new Stack<>();
+    while (free != null) {
+      buildOrderDfs(free, result);
+      free = graph.findAny(n -> n.state == Node.State.NOT_VISITED);
+    }
+    return result;
+  }
+
+  private static void buildOrderDfs(Node node, Stack<Node> result) {
+    if (node.state == Node.State.VISITED) return;
+    if (node.state == Node.State.IN_PROGRESS) throw new IllegalArgumentException("Can't be built in order");
+
+    node.state = Node.State.IN_PROGRESS;
+    for (Node d : node.destinations) {
+      buildOrderDfs(d, result);
+    }
+    result.push(node);
+    node.state = Node.State.VISITED;
+  }
+
   public static void main(String[] args) {
     Map<String, String> deps = new HashMap<>();
     deps.put("a", "d");
@@ -113,9 +148,21 @@ public class TopologicalSort {
     g.getOrAdd("e");
     g.getOrAdd("f");
 
+    System.out.println("Graph");
     g.print();
 
-    System.out.println(buildOrder(g));
+    System.out.println("Topological.");
+    Iterator<Node> it = buildOrder(g).iterator();
+    while (it.hasNext()) {
+      System.out.println(it.next());
+      it.remove();
+    }
+
+    System.out.println("Topological dfs.");
+    Stack<Node> s = buildOrderDfs(g);
+    while (!s.isEmpty()) {
+      System.out.println(s.pop());
+    }
   }
 }
 
