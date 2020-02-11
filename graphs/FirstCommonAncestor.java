@@ -142,6 +142,44 @@ public class FirstCommonAncestor {
     return r;
   }
 
+  private static class FcaResultBook {
+    Node node;
+    boolean isCommonAncestor;
+  }
+
+  public static Node fcaBook(Tree tree, Node p, Node q) {
+    FcaResultBook r = fcaBook(tree.root, p, q);
+    return r.isCommonAncestor ? r.node : null;
+  }
+
+  private static FcaResultBook fcaBook(Node tree, Node p, Node q) {
+    FcaResultBook r = new FcaResultBook();
+    if (tree == null) return r;
+    if (tree == p && tree == q) {
+      r.node = tree;
+      r.isCommonAncestor = true;
+      return r;
+    }
+
+    FcaResultBook rx = fcaBook(tree.left, p, q);
+    if (rx.isCommonAncestor) return rx;
+
+    FcaResultBook ry = fcaBook(tree.right, p, q);
+    if (ry.isCommonAncestor) return ry;
+
+    if (rx.node != null && ry.node != null) {
+      r.node = tree;
+      r.isCommonAncestor = true;
+      return r;
+    } else if (tree == p || tree == q) {
+      if (rx.node != null || ry.node != null) r.isCommonAncestor = true;
+      r.node = tree;
+      return r;
+    } else {
+      return rx.node == null ? ry : rx;
+    }
+  }
+
   private static int getHeight(Node n) {
     int height = 0;
     while (n.parent != null) {
@@ -161,28 +199,33 @@ public class FirstCommonAncestor {
     System.out.println("Expected fca: " + tree.root.left.data);
     System.out.println("Actual fca with parent: " + fcaWithParent(p, q).data);
     System.out.println("Actual fca without parent: " + fcaWithoutParent(tree, p, q).data);
+    System.out.println("Actual fca book: " + fcaBook(tree, p, q).data);
 
     q = q.left.right;
     System.out.println("Expected fca: " + tree.root.left.data);
     System.out.println("Actual fca with parent: " + fcaWithParent(p, q).data);
     System.out.println("Actual fca without parent: " + fcaWithoutParent(tree, p, q).data);
+    System.out.println("Actual fca book: " + fcaBook(tree, p, q).data);
 
     p = tree.root.right.left.right.left.right;
     q = tree.root.left.left.right.left.right;
     System.out.println("Expected fca: " + tree.root.data);
     System.out.println("Actual fca with parent: " + fcaWithParent(p, q).data);
     System.out.println("Actual fca without parent: " + fcaWithoutParent(tree, p, q).data);
+    System.out.println("Actual fca book: " + fcaBook(tree, p, q).data);
 
     p = tree.root.right.left.right;
     q = tree.root.right.left.right.left.right;
     System.out.println("Expected fca: " + tree.root.right.left.right.data);
     System.out.println("Actual fca with parent: " + fcaWithParent(p, q).data);
     System.out.println("Actual fca without parent: " + fcaWithoutParent(tree, p, q).data);
+    System.out.println("Actual fca book: " + fcaBook(tree, p, q).data);
 
     q = Tree.create(2).root.left;
     System.out.println("Expected fca: " + null);
     System.out.println("Actual fca with parent: " + fcaWithParent(p, q));
     System.out.println("Actual fca without parent: " + fcaWithoutParent(tree, p, q));
+    System.out.println("Actual fca book: " + fcaBook(tree, p, q));
   }
 }
 
