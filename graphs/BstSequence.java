@@ -3,6 +3,7 @@ import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class BstSequence {
   private static class Tree {
@@ -99,13 +100,61 @@ public class BstSequence {
     }
   }
 
+  public static ArrayList<LinkedList<Integer>> bstSequenceBook(Tree tree) {
+    return bstSequenceBook(tree.root);
+  }
+
+  private static ArrayList<LinkedList<Integer>> bstSequenceBook(Node node) {
+    ArrayList<LinkedList<Integer>> results = new ArrayList<>();
+    if (node == null) {
+      results.add(new LinkedList<>());
+      return results;
+    }
+
+    LinkedList<Integer> prefix = new LinkedList<>();
+    prefix.add(node.data);
+
+    ArrayList<LinkedList<Integer>> seqLeft = bstSequenceBook(node.left);
+    ArrayList<LinkedList<Integer>> seqRight = bstSequenceBook(node.right);
+
+    for (LinkedList<Integer> left : seqLeft) {
+      for (LinkedList<Integer> right : seqRight) {
+        ArrayList<LinkedList<Integer>> weaved = new ArrayList<>();
+        weave(left, right, prefix, weaved);
+        results.addAll(weaved);
+      }
+    }
+    return results;
+  }
+
+  private static void weave(LinkedList<Integer> left, LinkedList<Integer> right, LinkedList<Integer> prefix, ArrayList<LinkedList<Integer>> weaved) {
+    if (left.isEmpty() || right.isEmpty()) {
+      LinkedList<Integer> result = new LinkedList<>(prefix);
+      result.addAll(left);
+      result.addAll(right);
+      weaved.add(result);
+      return;
+    }
+
+    prefix.addLast(left.removeFirst());
+    weave(left, right, prefix, weaved);
+    left.addFirst(prefix.removeLast());
+    
+    prefix.addLast(right.removeFirst());
+    weave(left, right, prefix, weaved);
+    right.addFirst(prefix.removeLast());
+  }
+
   public static void main(String[] args) {
-    Tree tree = Tree.create(4);
+    Tree tree = Tree.create(3);
     System.out.println("Tree: " + tree);
     System.out.println("Has duplicates: " + tree.hasDuplicates());
     tree.inOrder(n -> System.out.println(n.data));
 
     bstSequence(tree);
+    ArrayList<LinkedList<Integer>> bookSequences = bstSequenceBook(tree);
+    System.out.println("Book sequences: " + bookSequences);
+    System.out.println("Book sequences count: " + bookSequences.size());
   }
 }
 
