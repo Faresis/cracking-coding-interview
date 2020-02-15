@@ -56,9 +56,11 @@ public class PathsWithSum {
 
     LinkedList<Node> currSeq = new LinkedList<>(seq);
     int currSeqSum = seqSum;
-    while (currSeqSum != searchSum && currSeq.size() > 1) currSeqSum -= currSeq.removeFirst().data;
     int result = 0;
-    if (currSeqSum == searchSum) result++;
+    while (!currSeq.isEmpty()) {
+      if (currSeqSum == searchSum) result++;
+      currSeqSum -= currSeq.removeFirst().data;
+    }
     return result
            + countSum(node.left, new LinkedList<Node>(seq), seqSum, searchSum)
            + countSum(node.right, new LinkedList<Node>(seq), seqSum, searchSum);
@@ -87,6 +89,10 @@ public class PathsWithSum {
 
     tree.root.data = -18;
     System.out.println("Sum 25 count: " + countSum(tree, 25));
+
+    tree.root.right.data = 18;
+    tree.root.right.right.right.data = 77;
+    System.out.println("Sum 84 count: " + countSum(tree, 84));
   }
 }
 
