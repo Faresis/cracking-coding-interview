@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.HashMap;
 
 public class PathsWithSum {
   private static class Tree {
@@ -45,6 +46,39 @@ public class PathsWithSum {
     }
   }
 
+  public static int countSumBook(Tree tree, int targetSum) {
+    return countSumBook(tree.root, new HashMap<Integer, Integer>(), 0, targetSum);
+  }
+
+  private static int countSumBook(Node node, HashMap<Integer, Integer> paths, int runningSum, int targetSum) {
+    if (node == null) return 0;
+
+    runningSum += node.data;
+    int rootSum = runningSum - targetSum;
+    int pathsCount = paths.getOrDefault(rootSum, 0);
+
+    if (runningSum == targetSum) pathsCount++;
+
+    addPath(paths, runningSum);
+    pathsCount += countSumBook(node.left, paths, runningSum, targetSum);
+    pathsCount += countSumBook(node.right, paths, runningSum, targetSum);
+    removePath(paths, runningSum);
+    return pathsCount;
+  }
+
+  private static void addPath(HashMap<Integer, Integer> paths, int path) {
+    int val = paths.getOrDefault(path, 0);
+    paths.put(path, ++val);
+  }
+
+  private static void removePath(HashMap<Integer, Integer> paths, int path) {
+    int val = paths.getOrDefault(path, 0);
+    if (val == 0)
+      paths.remove(path);
+    else
+      paths.put(path, --val);
+  }
+
   public static int countSum(Tree tree, int sum) {
     return countSum(tree.root, new LinkedList<Node>(), 0, sum);
   }
@@ -75,24 +109,31 @@ public class PathsWithSum {
     System.out.println("Tree: " + tree);
 
     System.out.println("Sum 7 count: " + countSum(tree, 7));
+    System.out.println("Sum 7 count book: " + countSumBook(tree, 7));
 
     tree.root.left.right.left.data = -1;
     System.out.println("Sum 7 count: " + countSum(tree, 7));
+    System.out.println("Sum 7 count book: " + countSumBook(tree, 7));
 
     tree.root.right.left.right.data = -3;
     System.out.println("Sum 7 count: " + countSum(tree, 7));
+    System.out.println("Sum 7 count book: " + countSumBook(tree, 7));
 
     System.out.println("Sum 0 count: " + countSum(tree, 0));
+    System.out.println("Sum 0 count book: " + countSumBook(tree, 0));
 
     tree.root.left.left.left.data = -15;
     System.out.println("Sum -15 count: " + countSum(tree, -15));
+    System.out.println("Sum -15 count book: " + countSumBook(tree, -15));
 
     tree.root.data = -18;
     System.out.println("Sum 25 count: " + countSum(tree, 25));
+    System.out.println("Sum 25 count book: " + countSumBook(tree, 25));
 
     tree.root.right.data = 18;
     tree.root.right.right.right.data = 77;
     System.out.println("Sum 84 count: " + countSum(tree, 84));
+    System.out.println("Sum 84 count book: " + countSumBook(tree, 84));
   }
 }
 
