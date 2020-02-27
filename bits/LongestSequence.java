@@ -6,6 +6,30 @@ public class LongestSequence {
     System.out.println("For 01s: " + longest((~0 >>> 1))); 
     System.out.println("For 0s110s: " + longest((6 << 5))); 
     System.out.println("For 1011111011110111: " + longest(0b1011111011110111)); 
+
+
+    System.out.println("For 1775 book: " + longestBook(1775)); 
+    System.out.println("For 0 book: " + longestBook(0)); 
+    System.out.println("For 1 book: " + longestBook(1)); 
+    System.out.println("For 01s book: " + longestBook((~0 >>> 1))); 
+    System.out.println("For 0s110s book: " + longestBook((6 << 5))); 
+    System.out.println("For 1011111011110111 book: " + longestBook(0b1011111011110111)); 
+  }
+
+  public static int longestBook(int num) {
+    int max = 1;
+    int previous = 0;
+    int current = 0;
+    while (num > 0) {
+      if ((num & 1) == 1) current++;
+      if ((num & 1) == 0) {
+         previous = (num & 2) == 0 ? 0 : current;
+         current = 0;
+      }
+      max = Math.max(max, current + previous + 1);
+      num /= 2;
+    }
+    return max;
   }
 
   public static int longest(int num) {
