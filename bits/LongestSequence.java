@@ -5,6 +5,7 @@ public class LongestSequence {
     System.out.println("For 1: " + longest(1)); 
     System.out.println("For 01s: " + longest((~0 >>> 1))); 
     System.out.println("For 0s110s: " + longest((6 << 5))); 
+    System.out.println("For 1011111011110111: " + longest(0b1011111011110111)); 
   }
 
   public static int longest(int num) {
@@ -20,13 +21,16 @@ public class LongestSequence {
       } else { // digit == 0
         if (isFirstSequence && firstSequence > 0) {
           isFirstSequence = false;
-        } else {
+        } else if (!isFirstSequence && secondSequence == 0) {
           isFirstSequence = true;
+          if (max < ++firstSequence) max = firstSequence;
+          firstSequence = 0;
+        } else if (!isFirstSequence && secondSequence > 0) {
           firstSequence = firstSequence + secondSequence + 1;
           if (max < firstSequence) max = firstSequence;
-          firstSequence = 0;
+          firstSequence = secondSequence;
           secondSequence = 0;
-        }
+        } // handles 1011111011110111
       }
       num /= 2;
     }
