@@ -4,36 +4,102 @@ public class NextNumber {
     next(13);
     System.out.println("Next number revised 13");
     nextRevised(13);
+    System.out.println("Next number arithmetic 13");
+    nextArithmetic(13);
 
     System.out.println("Next number 3");
     next(3);
     System.out.println("Next number revised 3");
     nextRevised(3);
+    System.out.println("Next number arithmetic 3");
+    nextArithmetic(3);
 
     System.out.println("Next number 1");
     next(1);
     System.out.println("Next number revised 1");
     nextRevised(1);
+    System.out.println("Next number arithmetic 1");
+    nextArithmetic(1);
 
     System.out.println("Next number 7");
     next(7);
     System.out.println("Next number revised 7");
     nextRevised(7);
+    System.out.println("Next number arithmetic 7");
+    nextArithmetic(7);
 
     System.out.println("Next number 0");
     next(0);
     System.out.println("Next number revised 0");
     nextRevised(0);
+    System.out.println("Next number arithmetic 0");
+    nextArithmetic(0);
 
     System.out.println("Next number 111011100");
     next(0b111011100);
     System.out.println("Next number revised 111011100");
     nextRevised(0b111011100);
+    System.out.println("Next number arithmetic 111011100");
+    nextArithmetic(0b111011100);
 
     System.out.println("Next number 111000111");
     next(0b111000111);
     System.out.println("Next number revised 111000111");
     nextRevised(0b111000111);
+    System.out.println("Next number arithmetic 111000111");
+    nextArithmetic(0b111000111);
+  }
+
+  public static void nextArithmetic(int num) {
+    nextLargestArithmetic(num);
+    nextSmallestArithmetic(num);
+  }
+
+  private static void nextLargestArithmetic(int num) {
+    int tmp = num;
+    int c0 = 0;
+    int c1 = 0;
+    while ((tmp & 1) == 0 && tmp != 0) {
+      c0++;
+      tmp >>= 1;
+    }
+    while ((tmp & 1) == 1) {
+      c1++;
+      tmp >>= 1;
+    }
+    if (c1+c0 == 31 || c1 + c0 == 0) {
+      System.out.println(num);
+      return;
+    } else {
+      System.out.println(getLargestArithmetic(num, c0, c1));
+    }
+  }
+
+  private static int getLargestArithmetic(int n, int c0, int c1) {
+    return n + (1 << c0) + (1 << (c1 - 1)) - 1;
+  }
+
+  private static void nextSmallestArithmetic(int num) {
+    int tmp = num;
+    int c0 = 0;
+    int c1 = 0;
+    while ((tmp & 1) == 1) {
+      c1++;
+      tmp = tmp >> 1;
+    }
+    if (tmp == 0) {
+      System.out.println(num);
+      return;
+    }
+    while ((tmp & 1) == 0 && tmp != 0) {
+      c0++;
+      tmp = tmp >> 1;
+    }
+    System.out.println(getSmallestArithmetic(num, c0, c1));
+  }
+
+  private static int getSmallestArithmetic(int n, int c0, int c1) {
+    return n - (1 << c1) - (1 << (c0 - 1)) + 1;
   }
 
   public static void nextRevised(int num) {
