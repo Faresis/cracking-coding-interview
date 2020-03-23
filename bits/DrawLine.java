@@ -5,6 +5,18 @@ public class DrawLine {
     print(screen, width); // clear screen
     drawLine(screen, width, 3, 9, 5);
     print(screen, width); // row with idx 5 (zero based) with bits 3 to 9 inclusively (zero based) are set to 1s
+
+    System.out.println("Single pixel scenario.");
+    screen = new byte[30];
+    print(screen, width); // clear screen
+    drawLine(screen, width, 3, 3, 5);
+    print(screen, width);
+
+    System.out.println("Middle full pixel scenario.");
+    screen = new byte[30];
+    print(screen, width);
+    drawLine(screen, width, 3, 17, 7);
+    print(screen, width);
   }
 
   private static void print(byte[] screen, int width) {
@@ -32,8 +44,15 @@ public class DrawLine {
   private static byte[] createRowMask(int start, int end, int width) {
     int len = width / 8;
     byte[] result = new byte[len];
-    for (int i = start; i <= end; i++)
+    for (int i = start; i <= end; i++) {
+      // full byte optimization
+      if (i%8 == 0 && i+7 <= end) {
+        result[i/8] = (byte) 0xFF;
+        i = i+7;
+        continue;
+      }
       result[i/8] |= (1 << (7-(i%8)));
+    }
     return result;
   }
 }
