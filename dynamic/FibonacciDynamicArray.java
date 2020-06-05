@@ -1,18 +1,19 @@
-public class FibonacciMemo {
+public class FibonacciDynamicArray {
   public static long fib(int n) {
-    return fib(n, new long[n+1]);
-  }
-
-  public static long fib(int n, long[] memo) {
     if (n < 0) throw new IllegalArgumentException();
     if (n == 0) return 0;
     if (n == 1) return 1;
-    if (memo[n] == 0) memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
-    return memo[n];
+
+    long[] memo = new long[n];
+    memo[0] = 0;
+    memo[1] = 1;
+    for (int i = 2; i < n; i++)
+      memo[i] = memo[i-1] + memo[i-2];
+    return memo[n-1] + memo[n-2];
   }
 
   public static void main(String[] args) {
-    int size = 19_000;
+    int size = 100_000;
     for (int i = 0; i < size; i++)
       System.out.println(i + ": " + fib(i));
   }
