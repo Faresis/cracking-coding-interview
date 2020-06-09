@@ -18,9 +18,47 @@ public class RobotInGrid {
 
     List<Path> path = findPath(grid, 7, 7);
     System.out.println(path);
+    System.out.println("Cells checked: " + cellsChecked);
+
+    System.out.println("With Memo.");
+    path = findPathWithMemo(grid, 7, 7, new boolean[8][8]);
+    System.out.println(path);
+    System.out.println("Cells checked: " + cellsCheckedWithMemo);
   }
 
+  static long cellsCheckedWithMemo = 0;
+  static List<Path> findPathWithMemo(Grid grid, int row, int col, boolean[][] visited) {
+    Cell curr = grid.get(row, col);
+    if (curr == null || curr.isBlocked) return List.of();
+
+    if (visited[row][col]) return List.of();
+    visited[row][col] = true;
+    cellsCheckedWithMemo++;
+
+    Cell left = grid.get(row, col-1);
+    if (left != null && left.isRobot) return List.of(Path.RIGHT);
+    Cell up = grid.get(row-1, col);
+    if (up != null && up.isRobot) return List.of(Path.DOWN);
+    List<Path> leftPath = findPathWithMemo(grid, row, col-1, visited);
+    if (!leftPath.isEmpty()) {
+      return new ArrayList<Path>() {{
+        addAll(leftPath);
+        add(Path.RIGHT);
+      }};
+    }
+    List<Path> upPath = findPathWithMemo(grid, row-1, col, visited);
+    if (!upPath.isEmpty()) {
+      return new ArrayList<Path>() {{
+        addAll(upPath);
+        add(Path.DOWN);
+      }};
+    }
+    return List.of();
+  }
+
+  static long cellsChecked = 0;
   static List<Path> findPath(Grid grid, int row, int col) {
+    cellsChecked++;
     Cell curr = grid.get(row, col);
     if (curr == null || curr.isBlocked) return List.of();
     Cell left = grid.get(row, col-1);
