@@ -3,12 +3,21 @@ import java.util.HashSet;
 
 public class PowerSet {
   public static void main(String[] args) {
+    Set<Character> input = Set.of('a', 'b', 'c', 'd');
     System.out.println("Top - Down");
-    System.out.println(createPowerSet(Set.of('a', 'b', 'c', 'd')));
+    Set<Set<Character>> set1 = createPowerSet(input);
+    System.out.println(set1);
+    System.out.println("Records number: " + set1.size());
+    System.out.println("Proposals: " + proposals1);
+
     System.out.println("Bottom - Up");
-    System.out.println(createPowerSet2(Set.of('a', 'b', 'c', 'd')));
+    Set<Set<Character>> set2 = createPowerSet2(input);
+    System.out.println(set2);
+    System.out.println("Records number: " + set2.size());
+    System.out.println("Proposals: " + proposals2);
   }
 
+  static long proposals2 = 0;
   // Bottom - Up
   static Set<Set<Character>> createPowerSet2(Set<Character> set) {
     Set<Set<Character>> powerSet = new HashSet<>();
@@ -24,6 +33,7 @@ public class PowerSet {
           if (subSet.contains(c)) continue;
           Set<Character> proposal = new HashSet<>(subSet);
           proposal.add(c);
+          proposals2++;
           if (!powerSet.contains(proposal)) {
             toBeAdded.add(proposal);
             wasAdded = true;
@@ -35,6 +45,7 @@ public class PowerSet {
     return powerSet;
   }
 
+  static long proposals1 = 0;
   // Top - Down
   static Set<Set<Character>> createPowerSet(Set<Character> set) {
     Set<Set<Character>> powerSet = new HashSet<>();
@@ -50,6 +61,7 @@ public class PowerSet {
     for (Character c : set) {
       Set<Character> subSet = new HashSet<>(set);
       subSet.remove(c);
+      proposals1++;
       fillPowerSet(subSet, powerSet);
     }
   }
