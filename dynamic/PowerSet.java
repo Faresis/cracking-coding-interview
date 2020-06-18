@@ -1,5 +1,7 @@
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Arrays;
 
 public class PowerSet {
   public static void main(String[] args) {
@@ -15,6 +17,34 @@ public class PowerSet {
     System.out.println(set2);
     System.out.println("Records number: " + set2.size());
     System.out.println("Proposals: " + proposals2);
+
+    System.out.println("Top - Down. Revised.");
+    Set<Set<Character>> set3 = createPowerSet3(input);
+    System.out.println(set3);
+    System.out.println("Records number: " + set3.size());
+  }
+
+  // Top - Down. Revised
+  static Set<Set<Character>> createPowerSet3(Set<Character> set) {
+    return createPowerSet3Rec(new HashSet<>(set));
+  }
+
+  static Set<Set<Character>> createPowerSet3Rec(Set<Character> set) {
+    if (set.isEmpty()) return new HashSet<>(Arrays.asList(new HashSet<>()));
+
+    Iterator<Character> it = set.iterator();
+    Character current = it.next();
+    it.remove();
+    Set<Set<Character>> powerSet = createPowerSet3Rec(set);
+    Set<Set<Character>> toAdd = new HashSet<>();
+    System.out.println("powerSet: " + powerSet);
+    for (Set<Character> subSet : powerSet) {
+      Set<Character> extendedSubset = new HashSet<>(subSet);
+      extendedSubset.add(current);
+      toAdd.add(extendedSubset);
+    }
+    powerSet.addAll(toAdd);
+    return powerSet;
   }
 
   static long proposals2 = 0;
