@@ -22,13 +22,32 @@ public class PowerSet {
     Set<Set<Character>> set3 = createPowerSet3(input);
     System.out.println(set3);
     System.out.println("Records number: " + set3.size());
+
+    System.out.println("Bottom - Up. Revised.");
+    Set<Set<Character>> set4 = createPowerSet4(input);
+    System.out.println(set4);
+    System.out.println("Records number: " + set4.size());
+  }
+
+  // Bottom - Up. Revised
+  static Set<Set<Character>> createPowerSet4(Set<Character> set) {
+    Set<Set<Character>> powerSet = new HashSet<>(Arrays.asList(new HashSet<>()));
+    for (Character current : set) {
+      Set<Set<Character>> toAdd = new HashSet<>();
+      for (Set<Character> subSet : powerSet) {
+        Set<Character> extendedSubset = new HashSet<>(subSet);
+        extendedSubset.add(current);
+        toAdd.add(extendedSubset);
+      }
+      powerSet.addAll(toAdd);
+    }
+    return powerSet;
   }
 
   // Top - Down. Revised
   static Set<Set<Character>> createPowerSet3(Set<Character> set) {
     return createPowerSet3Rec(new HashSet<>(set));
   }
-
   static Set<Set<Character>> createPowerSet3Rec(Set<Character> set) {
     if (set.isEmpty()) return new HashSet<>(Arrays.asList(new HashSet<>()));
 
@@ -37,7 +56,6 @@ public class PowerSet {
     it.remove();
     Set<Set<Character>> powerSet = createPowerSet3Rec(set);
     Set<Set<Character>> toAdd = new HashSet<>();
-    System.out.println("powerSet: " + powerSet);
     for (Set<Character> subSet : powerSet) {
       Set<Character> extendedSubset = new HashSet<>(subSet);
       extendedSubset.add(current);
@@ -82,7 +100,6 @@ public class PowerSet {
     fillPowerSet(set, powerSet);
     return powerSet;
   }
-
   static void fillPowerSet(Set<Character> set, Set<Set<Character>> powerSet) {
     if (powerSet.contains(set)) return;
 
