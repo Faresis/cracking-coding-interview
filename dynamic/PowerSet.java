@@ -2,6 +2,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class PowerSet {
   public static void main(String[] args) {
@@ -27,6 +28,27 @@ public class PowerSet {
     Set<Set<Character>> set4 = createPowerSet4(input);
     System.out.println(set4);
     System.out.println("Records number: " + set4.size());
+
+    System.out.println("Binary ticker.");
+    Set<Set<Character>> set5 = createPowerSet5(input);
+    System.out.println(set5);
+    System.out.println("Records number: " + set5.size());
+  }
+
+  // binary ticker
+  static Set<Set<Character>> createPowerSet5(Collection<Character> collection) {
+    Set<Set<Character>> powerSet = new HashSet<>(Arrays.asList(new HashSet<>()));
+    Character[] arr = collection.toArray(new Character[0]);
+    for (int i = 0; i < Math.pow(2, arr.length); i++) {
+      Set<Character> set = new HashSet<>();
+      for (int c = 0; c < arr.length; c++) {
+        if ((i & (1 << c)) > 0) {
+          set.add(arr[c]);
+        }
+      }
+      powerSet.add(set);
+    }
+    return powerSet;
   }
 
   // Bottom - Up. Revised
