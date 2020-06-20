@@ -38,6 +38,19 @@ public class Multiplication {
     calls_v3 = 0;
     System.out.println("9456*18741:" + multiply_v3(9456, 18741));
     System.out.println("Calls v3: " + calls_v3);
+
+    System.out.println("V4:");
+    System.out.println("6*0:" + multiply_v4(6, 0));
+    System.out.println("0*5:" + multiply_v4(0, 5));
+    System.out.println("1*5:" + multiply_v4(1, 5));
+    System.out.println("6*1:" + multiply_v4(6, 1));
+    System.out.println("6*5:" + multiply_v4(6, 5));
+    System.out.println("6*6:" + multiply_v4(6, 6));
+    System.out.println("7*8:" + multiply_v4(7, 8));
+    System.out.println("1024*1024:" + multiply_v4(1024, 1024));
+    System.out.println("Calls v4: " + calls_v4);
+    System.out.println("9456*18741:" + multiply_v4(9456, 18741));
+    System.out.println("Calls v4: " + calls_v4);
   }
 
   static long calls_v1 = 0;
@@ -78,6 +91,26 @@ public class Multiplication {
     if (a % 2 == 0) return multiply_v3(a >> 1, b) << 1;
     if (b % 2 == 0) return multiply_v3(a, b >> 1) << 1;
     return (multiply_v3(a >> 1, b) << 1) + b;
+  }
+
+  static long calls_v4 = 0;
+  static long multiply_v4(int a, int b) {
+    calls_v4 = 0;
+    int smaller = a < b ? a : b;
+    int bigger = a > b ? a : b;
+    return multiply_v4_rec(smaller, bigger);
+  }
+
+  private static long multiply_v4_rec(int smaller, int bigger) {
+    calls_v4++;
+    if (smaller == 0) return 0;
+    if (smaller == 1) return bigger;
+
+    long half = multiply_v4_rec(smaller >> 1, bigger);
+    if (smaller % 2 == 0)
+      return half + half;
+    else
+      return half + half + bigger;
   }
 }
 
