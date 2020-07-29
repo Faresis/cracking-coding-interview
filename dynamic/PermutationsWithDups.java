@@ -6,6 +6,8 @@ import static java.util.stream.Stream.concat;
 import java.util.List;
 import java.util.Set;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class PermutationsWithDups {
   public static void main(String[] args) {
@@ -17,6 +19,7 @@ public class PermutationsWithDups {
     System.out.println("Permutaions with Set - abcc: " + permutationsWithSet("abcc"));
     System.out.println("Permutaions with Set - aba: " + permutationsWithSet("aba"));
     System.out.println("Permutaions with Set - abaa: " + permutationsWithSet("abaa"));
+    System.out.println("Permutaions with Set - aaaaaaaaaa: " + permutationsWithSet("aaaaaaaaaa"));
 
     System.out.println("Permutaions - abb: " + permutations("abb"));
     System.out.println("Permutaions - abbb: " + permutations("abbb"));
@@ -26,6 +29,17 @@ public class PermutationsWithDups {
     System.out.println("Permutaions - abcc: " + permutations("abcc"));
     System.out.println("Permutaions - aba: " + permutations("aba"));
     System.out.println("Permutaions - abaa: " + permutations("abaa"));
+    System.out.println("Permutaions - aaaaaaaaaa: " + permutations("aaaaaaaaaa"));
+
+    System.out.println("Permutaions revised - abb: " + permutationsRevised("abb"));
+    System.out.println("Permutaions revised - abbb: " + permutationsRevised("abbb"));
+    System.out.println("Permutaions revised - adbb: " + permutationsRevised("adbb"));
+    System.out.println("Permutaions revised - ab: " + permutationsRevised("ab"));
+    System.out.println("Permutaions revised - abc: " + permutationsRevised("abc"));
+    System.out.println("Permutaions revised - abcc: " + permutationsRevised("abcc"));
+    System.out.println("Permutaions revised - aba: " + permutationsRevised("aba"));
+    System.out.println("Permutaions revised - abaa: " + permutationsRevised("abaa"));
+    System.out.println("Permutaions revised - aaaaaaaaaa: " + permutationsRevised("aaaaaaaaaa"));
   }
 
   static List<String> permutationsWithSet(String s) {
@@ -111,6 +125,41 @@ public class PermutationsWithDups {
                     .map(LinkedList::new)
                     .map(m -> { m.add(0, c); return m; })
                     .collect(toList());
+  }
+
+  static List<String> permutationsRevised(String string) {
+    List<String> results = new LinkedList<>();
+    Map<Character, Integer> frequency = characterFrequency(string);
+    permutationsRevised(frequency, "", string.length(), results);
+    return results;
+  }
+
+  static List<String> permutationsRevised(Map<Character, Integer> frequency,
+                                          String prefix,
+                                          int remains,
+                                          List<String> results) {
+    if (remains == 0) {
+      results.add(prefix);
+      return results;
+    }
+
+    for (Character c : frequency.keySet()) {
+      int count = frequency.get(c);
+      if (count > 0) {
+        frequency.put(c, count - 1);
+        permutationsRevised(frequency, prefix + c, remains - 1, results);
+        frequency.put(c, count);
+      }
+    }
+    return results;
+  }
+
+  static Map<Character, Integer> characterFrequency(String string) {
+    Map<Character, Integer> frequency = new HashMap<>();
+    for (Character c : string.toCharArray()) {
+      frequency.compute(c, (k, v) -> (v == null) ? 1 : ++v);
+    }
+    return frequency;
   }
 }
 
