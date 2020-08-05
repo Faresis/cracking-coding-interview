@@ -10,6 +10,29 @@ public class Parentheses {
     System.out.println("Parentheses 2: " + parentheses(2));
     System.out.println("Parentheses 3: " + parentheses(3));
     System.out.println("Parentheses 4: " + parentheses(4));
+
+    System.out.println("Parentheses rec 1: " + parenthesesRec(1));
+    System.out.println("Parentheses rec 2: " + parenthesesRec(2));
+    System.out.println("Parentheses rec 3: " + parenthesesRec(3));
+    System.out.println("Parentheses rec 4: " + parenthesesRec(4));
+  }
+
+  static List<String> parenthesesRec(int num) {
+    return parenthesesRec("", num, num);
+  }
+
+  static List<String> parenthesesRec(String prefix, int left, int right) {
+    if (left < 0 || right < 0) throw new IllegalArgumentException();
+    if (left == 0 && right == 0) return List.of(prefix);
+
+    List<String> result = new LinkedList<>();
+    if (left > 0) {
+      result.addAll(parenthesesRec(prefix + "(", left - 1, right));
+    }
+    if (right > left) {
+      result.addAll(parenthesesRec(prefix + ")", left, right - 1));
+    }
+    return result;
   }
 
   static Set<List<Parens>> parentheses(int n) {
