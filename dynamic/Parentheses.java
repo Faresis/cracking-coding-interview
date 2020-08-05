@@ -41,10 +41,12 @@ public class Parentheses {
     while (--n > 0) {
       combinations = combinations.stream()
                                  .flatMap(c ->
-                                          Stream.of(
-                                            wrap(c),
-                                            insertFirst(c),
-                                            insertLast(c)
+                                          Stream.concat(
+                                            wrap(c).stream(),
+                                            Stream.of(
+                                              insertFirst(c),
+                                              insertLast(c)
+                                            )
                                           )
                                  )
                                  .collect(toSet());
@@ -52,8 +54,15 @@ public class Parentheses {
     return combinations;
   }
 
-  static List<Parens> wrap(List<Parens> list) {
-    return List.of(new Parens(list));
+  static List<List<Parens>> wrap(List<Parens> list) {
+    List<List<Parens>> result = new LinkedList<>();
+    for (int i = 0; i < list.size(); i++) {
+      List<Parens> clone = new LinkedList<>(list);
+      clone.set(i, new Parens(List.of(clone.get(i))));
+      result.add(clone);
+    }
+    result.add(List.of(new Parens(list)));
+    return result;
   }
 
   static List<Parens> insertFirst(List<Parens> list) {
