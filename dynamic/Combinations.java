@@ -3,6 +3,7 @@ import static java.util.stream.Collectors.toMap;
 
 import java.util.List;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
@@ -10,18 +11,42 @@ import java.util.stream.Stream;
 public class Combinations {
   public static void main(String[] args) {
     for (int i = 1; i < 100; i++) {
-      System.out.println("Combinations TD(" + i + "): " + combinationsTopDown(i, List.of(1,5,10,25)));
+      System.out.println("Combinations TD(" + i + "): " + combinationsTopDown(i, List.of(25,10,5,1), new HashMap<>()));
       System.out.println("Combinations BU(" + i + "): " + combinationsBottomUp(i, List.of(1,5,10,25)));
     }
+
+    // -Xmx8192m -XX:MaxPermSize=6144m 
+    System.out.println("Combinations TD(100_000_000): "
+      + combinationsTopDown(100_000_000, List.of(25,10,5,1), new HashMap<>()));
   }
 
-  static int combinationsTopDown(int num, List<Integer> elements) {
+  static int combinationsTopDown(int num, List<Integer> elements, Map<Integer, Map<List<Integer>, Integer>> map) {
+    // warm-up to avoid stack overflow
+    if (num > 10_000) {
+      for (int i = 10_000; i < num; i += 10_000) {
+        System.out.println("Warm-up: " + i);
+        combinationsTopDownCalculation(i, elements, map);
+      }
+    }
+    return combinationsTopDownCalculation(num, elements, map);
+  }
+
+  private static int combinationsTopDownCalculation(
+    int num, List<Integer> elements, Map<Integer, Map<List<Integer>, Integer>> map) {
+
+    if (map.containsKey(num) && map.get(num).containsKey(elements)) return map.get(num).get(elements);
+
     if (num == 0) return 1;
     if (elements.isEmpty()) return 0;
     if (num < 0) return 0;
 
-    return combinationsTopDown(num - elements.get(0), elements) +
-           combinationsTopDown(num, elements.subList(1, elements.size()));   
+    if (elements.size() == 1) return num % elements.get(0) == 0 ? 1 : 0;
+
+    int result = combinationsTopDownCalculation(num - elements.get(0), elements, map) +
+                 combinationsTopDownCalculation(num, elements.subList(1, elements.size()), map);   
+    map.compute(num, (k, v) -> (v == null) ? new HashMap<>() : v)
+       .put(elements, result);
+    return result;
   }
 
   static int combinationsBottomUp(int num, List<Integer> elements) {
