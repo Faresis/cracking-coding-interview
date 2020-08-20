@@ -2,6 +2,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class StackOfBoxes {
   public static void main(String[] args) {
@@ -13,10 +18,66 @@ public class StackOfBoxes {
     boxes.add(new Box(5,5,5));
     boxes.add(new Box(6,6,6));
 
-    System.out.println(tallestStock(boxes));
+    System.out.println("Table: " + tallestStack(boxes));
+    System.out.println("Recursion: " + tallestStackRecursive(boxes));
   }
 
-  static int tallestStock(List<Box> boxes) {
+  static int tallestStackRecursive(List<Box> boxes) {
+    Collections.sort(boxes, Comparator.comparing(Box::volume).reversed());
+
+    List<Stack<Box>> stacks = new LinkedList<>();
+
+    Map<Integer, List<Stack<Box>>> cache = new HashMap<>();
+    for (int i = 0; i < boxes.size(); i++) {
+      stacks.addAll(gatherStacks(boxes, i, cache));
+    }
+
+    return stacks.stream()
+                 .mapToInt(stack -> stack.stream()
+                                         .collect(Collectors.summingInt(Box::getHeight)))
+                 .max()
+                 .orElse(-1);
+  }
+
+  private static void print(List<Stack<Box>> stacks) {
+    for (Stack<Box> stack : stacks) {
+      System.out.println("**** Stack ****");
+      for (Box box : stack) {
+        System.out.println(box.height);
+      }
+      System.out.println("**** END Stack ****");
+    }
+  }
+
+  private static List<Stack<Box>> gatherStacks(List<Box> boxes, int idx, Map<Integer, List<Stack<Box>>> cache) {
+    if (cache.get(idx) != null) return cache.get(idx);
+
+    Box bottom = boxes.get(idx);
+    List<Stack<Box>> result = new LinkedList<>();
+    for (int i = idx+1; i < boxes.size(); i++) {
+      if (bottom.fits(boxes.get(i))) {
+        List<Stack<Box>> children = gatherStacks(boxes, i, cache);
+        for (Stack<Box> child : children) {
+          Stack<Box> copy = new Stack<>();
+          copy.addAll(child);
+          copy.push(bottom);
+          result.add(copy);
+        }
+      }
+    }
+
+    // last item
+    if (result.isEmpty()) {
+      Stack<Box> stack = new Stack<>();
+      stack.push(bottom);
+      result.add(stack);
+    }
+
+    cache.put(idx, result);
+    return result;
+  }
+
+  static int tallestStack(List<Box> boxes) {
     Collections.sort(boxes, Comparator.comparing(Box::volume));   
 
     int[][] weights = new int[boxes.size()][boxes.size()];
@@ -72,6 +133,10 @@ public class StackOfBoxes {
       this.height = height;
       this.width = width;
       this.depth = depth;
+    }
+
+    int getHeight() {
+      return this.height;
     }
 
     int volume() {
