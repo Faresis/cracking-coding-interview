@@ -20,6 +20,34 @@ public class StackOfBoxes {
 
     System.out.println("Table: " + tallestStack(boxes));
     System.out.println("Recursion: " + tallestStackRecursive(boxes));
+    System.out.println("Revised: " + tallestStackRevised(boxes));
+  }
+
+  static int tallestStackRevised(List<Box> boxes) {
+    Collections.sort(boxes, Comparator.comparing(Box::volume).reversed());
+
+    int[] cache = new int[boxes.size()];
+    int max = 0;
+    for (int i = 0; i < boxes.size(); i++) {
+      max = Math.max(max, calculateStack(boxes, i, cache));
+    }
+    return max;
+  }
+
+  private static int calculateStack(List<Box> boxes, int idx, int[] cache) {
+    if (idx < cache.length && cache[idx] > 0) return cache[idx];
+
+    Box bottom = boxes.get(idx);
+    int max = 0;
+    for (int i = idx+1; i < boxes.size(); i++) {
+      if (bottom.fits(boxes.get(i))) {
+        max = Math.max(max, calculateStack(boxes, i, cache));
+      }
+    }
+    max += bottom.height;
+
+    cache[idx] = max;
+    return max;
   }
 
   static int tallestStackRecursive(List<Box> boxes) {
